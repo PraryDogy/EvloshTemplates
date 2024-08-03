@@ -106,6 +106,8 @@ if __name__ == "__main__":
     sys.argv.append(PY_2APP)
 
     try:
+        remove_trash()
+
         setup(
             app=MAIN_FILES,
             name=APP_NAME,
@@ -114,8 +116,7 @@ if __name__ == "__main__":
             setup_requires=[PY_2APP],
             )
 
-        remove_trash()
-        move_app_to_desktop()
+        move_app_to_desktop(APP_NAME)
         remove_trash()
 
     except Exception as e:
