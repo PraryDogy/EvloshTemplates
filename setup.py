@@ -59,7 +59,7 @@ BUNDLE_ID = f"com.{SHORT_AUTHOR_NAME}.{APP_NAME}" # DON'T CHANGE IT
 PY_2APP = "py2app" # DON'T CHANGE IT
 
 
-# include folder with .jpg and .svg files
+# CREATE FILES LIST WITH EXTENSIONS
 folder_name = "FOLDER_NAME"
 extensions = (".FILE_EXTENSION", ".FILE_EXTENSION",)
 FOLDER_EXT_FILES = [
@@ -68,7 +68,7 @@ FOLDER_EXT_FILES = [
     if i.endswith(extensions)
     ]
 
-# include folder with any file
+# CREATE FILES LIST
 folder_name = "FOLDER_NAME"
 FOLDER_ANY_FILES = [
     os.path.join(folder_name, i)
@@ -77,7 +77,6 @@ FOLDER_ANY_FILES = [
 
 # IF YOU DON'T HAVE ADVANCED FILES
 DATA_FILES = []
-
 
 # IF YOU HAVE ADVANCED FILES
 DATA_FILES = [
