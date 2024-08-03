@@ -8,7 +8,6 @@ import os
 import shutil
 import subprocess
 import sys
-import traceback
 from datetime import datetime
 
 from setuptools import setup
@@ -30,23 +29,35 @@ def move_app_to_desktop(appname: str):
     dest = os.path.join(desktop, f"{appname}.app")
     src = os.path.join("dist", f"{appname}.app")
 
-    if os.path.exists(dest):
-        shutil.rmtree(dest)
+    try:
+        if os.path.exists(dest):
+            shutil.rmtree(dest)
+    except Exception as e:
+        print(e)
 
-    shutil.move(src, dest)
-    subprocess.Popen(["open", "-R", dest])
+    try:
+        shutil.move(src, dest)
+    except Exception as e:
+        print(e)
+
+    try:
+        subprocess.Popen(["open", "-R", dest])
+    except Exception as e:
+        print(e)
 
 
-
-PY_2APP = "py2app" # don't change it
-YEAR = datetime.now().year
-AUTHOR = "AUTHOR NAME"
-COMPANY = "COMPANY_NAME"
+YEAR = datetime.now().year # CURRENT YEAR
+AUTHOR = "AUTHOR NAME"  # "Evgeny Loshkarev"
+SHORT_AUTHOR_NAME = "SHORT_AUTHOR_NAME" # "Evlosh"
+COMPANY = "COMPANY_NAME" # "MIUZ Diamonds" or ""
 APP_NAME = "APP_NAME"
-BUNDLE_ID = f"com.ANY_NAME.{APP_NAME}"
-APP_VER = "APP_VER"
-ICON_PATH = "ICON_PATH"
-MAIN_FILES = ["FILENAME.py"]
+APP_VER = "APP_VER" # "1.0.0"
+ICON_PATH = "ICON_PATH" # "icon/icon.icns" or "icon.icns"
+MAIN_FILES = ["FILENAME.py"] # SINGLE OR MULTIPLE PYTHON FILES
+
+BUNDLE_ID = f"com.{SHORT_AUTHOR_NAME}.{APP_NAME}" # DON'T CHANGE IT
+PY_2APP = "py2app" # DON'T CHANGE IT
+
 
 # include folder with .jpg and .svg files
 folder_name = "FOLDER_NAME"
@@ -64,13 +75,21 @@ FOLDER_ANY_FILES = [
     for i in os.listdir(folder_name)
     ]
 
-# EXAMPLE
+# IF YOU DON'T HAVE ADVANCED FILES
+DATA_FILES = []
+
+
+# IF YOU HAVE ADVANCED FILES
 DATA_FILES = [
-    "SINGLE_FILE.ext",
+    "SINGLE_FILE.ext", # SINGLE FILE
     "FOLDER/SINGLE_FILE.ext", # SINGLE FILE WITH FOLDER
     ("FOLDER_NAME", FOLDER_EXT_FILES), # MULTIPLE FILES WITH EXTENSIONS AND FOLDER 
     ("FOLDER_NAME", FOLDER_ANY_FILES) # MULTIPLE FILES WITH FOLDER
     ]
+
+
+
+# DON'T CHANGE IT
 
 OPTIONS = {"iconfile": ICON_PATH,
            "plist": {"CFBundleName": APP_NAME,
@@ -85,7 +104,6 @@ OPTIONS = {"iconfile": ICON_PATH,
 
 if __name__ == "__main__":
 
-    #you can run this file
     sys.argv.append(PY_2APP)
 
     try:
