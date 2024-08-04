@@ -22,7 +22,6 @@ def remove_trash():
         try:
             shutil.rmtree(i)
         except Exception as e:
-            print(e)
             continue
 
 
