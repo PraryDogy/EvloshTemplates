@@ -12,9 +12,12 @@ from datetime import datetime
 
 from setuptools import setup
 
+# ****************** DON'T CHANGE IT ******************
 
 def remove_trash():
+
     trash = ("build", ".eggs", "dist")
+
     for i in trash:
         try:
             shutil.rmtree(i)
@@ -24,6 +27,7 @@ def remove_trash():
 
 
 def move_app_to_desktop(appname: str):
+
     desktop = os.path.expanduser("~/Desktop")
 
     dest = os.path.join(desktop, f"{appname}.app")
@@ -46,49 +50,42 @@ def move_app_to_desktop(appname: str):
         print(e)
 
 
-YEAR = datetime.now().year # CURRENT YEAR
-AUTHOR = "AUTHOR NAME"  # "Evgeny Loshkarev"
-SHORT_AUTHOR_NAME = "SHORT_AUTHOR_NAME" # "Evlosh"
-COMPANY = "COMPANY_NAME" # "MIUZ Diamonds" or ""
-APP_NAME = "APP_NAME"
-APP_VER = "APP_VER" # "1.0.0"
-ICON_PATH = "ICON_PATH" # "icon/icon.icns" or "icon.icns"
+def include_files(folder_name: str) -> list[str, list]:
+    return (
+        folder_name,
+        [os.path.join(folder_name, i) for i in os.listdir(folder_name)]
+        )
+
+
+
+
+
+# ****************** YOUR DATA ******************
+
+AUTHOR = ""  # "Evgeny Loshkarev"
+SHORT_AUTHOR_NAME = "" # "Evlosh"
+COMPANY = "" # "MIUZ Diamonds" or ""
+APP_NAME = ""
+APP_VER = "" # "1.0.0"
+ICON_PATH = "" # "icon/icon.icns" or "icon.icns"
 MAIN_FILES = ["FILENAME.py"] # SINGLE OR MULTIPLE PYTHON FILES
 
-BUNDLE_ID = f"com.{SHORT_AUTHOR_NAME}.{APP_NAME}" # DON'T CHANGE IT
-PY_2APP = "py2app" # DON'T CHANGE IT
 
-
-# CREATE FILES LIST WITH EXTENSIONS
-folder_name = "FOLDER_NAME"
-extensions = (".FILE_EXTENSION", ".FILE_EXTENSION",)
-FOLDER_EXT_FILES = [
-    os.path.join(folder_name, i)
-    for i in os.listdir(folder_name)
-    if i.endswith(extensions)
-    ]
-
-# CREATE FILES LIST
-folder_name = "FOLDER_NAME"
-FOLDER_ANY_FILES = [
-    os.path.join(folder_name, i)
-    for i in os.listdir(folder_name)
-    ]
-
-# IF YOU DON'T HAVE ADVANCED FILES
-DATA_FILES = []
-
-# IF YOU HAVE ADVANCED FILES
 DATA_FILES = [
     "SINGLE_FILE.ext", # SINGLE FILE
-    "FOLDER/SINGLE_FILE.ext", # SINGLE FILE WITH FOLDER
-    ("FOLDER_NAME", FOLDER_EXT_FILES), # MULTIPLE FILES WITH EXTENSIONS AND FOLDER 
-    ("FOLDER_NAME", FOLDER_ANY_FILES) # MULTIPLE FILES WITH FOLDER
+    "FOLDER_NAME/SINGLE_FILE.ext", # SINGLE FILE WITH FOLDER
+    include_files("FOLDER_NAME"), # FOLDER WITH FILES
     ]
 
 
 
-# DON'T CHANGE IT
+
+
+# ****************** DON'T CHANGE IT ******************
+
+YEAR = datetime.now().year # CURRENT YEAR
+BUNDLE_ID = f"com.{SHORT_AUTHOR_NAME}.{APP_NAME}" # DON'T CHANGE IT
+PY2APP = "py2app" # DON'T CHANGE IT
 
 OPTIONS = {"iconfile": ICON_PATH,
            "plist": {"CFBundleName": APP_NAME,
@@ -100,25 +97,22 @@ OPTIONS = {"iconfile": ICON_PATH,
                          f"\nCopyright © {YEAR} {COMPANY}."
                          f"\nAll rights reserved.")}}
 
+sys.argv.append(PY2APP)
 
-if __name__ == "__main__":
+try:
+    remove_trash()
 
-    sys.argv.append(PY_2APP)
+    setup(
+        app=MAIN_FILES,
+        name=APP_NAME,
+        data_files=DATA_FILES,
+        options={PY2APP: OPTIONS},
+        setup_requires=[PY2APP],
+        )
 
-    try:
-        remove_trash()
+    move_app_to_desktop(APP_NAME)
+    remove_trash()
 
-        setup(
-            app=MAIN_FILES,
-            name=APP_NAME,
-            data_files=DATA_FILES,
-            options={PY_2APP: OPTIONS},
-            setup_requires=[PY_2APP],
-            )
-
-        move_app_to_desktop(APP_NAME)
-        remove_trash()
-
-    except Exception as e:
-        print(e)
-        remove_trash()
+except Exception as e:
+    print(e)
+    remove_trash()
