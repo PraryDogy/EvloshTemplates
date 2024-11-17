@@ -1,47 +1,44 @@
 import os
+import subprocess
 import sys
 import traceback
 
-from PyQt5.QtWidgets import QApplication, QMessageBox, QPushButton
+
+class System_:
+
+    @classmethod
+    def catch_error(cls, *args) -> None:
+
+        STARS = "*" * 40
+        ABOUT = "Отправьте это сообщение в telegram @evlosh или на почту loshkarev@miuz.ru"
+        ERROR = traceback.format_exception(*args)
+
+        SUMMARY_MSG = "\n".join([*ERROR, STARS, ABOUT])
+        
+        # 
+        # 
+        # 
+        # скопируй к себе scpt файл
+        script = "error_msg.scpt"
+        subprocess.run(["osascript", script, SUMMARY_MSG])
+        # 
+        # 
+        # 
+
+    @classmethod
+    def set_plugin_path(cls) -> bool:
+        #lib folder appears when we pack this project to .app with py2app
+        if os.path.exists("lib"): 
+            plugin_path = "lib/python3.11/PyQt5/Qt5/plugins"
+            os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = plugin_path
+            return True
+        else:
+            return False
+        
+    @classmethod
+    def set_excepthook(cls) -> None:
+        sys.excepthook = cls.catch_error
 
 
-def catch_err(exc_type, exc_value, exc_traceback):
-    error_message = "".join(
-        traceback.format_exception(exc_type, exc_value, exc_traceback)
-        )
-    error_dialog(error_message)
-
-
-def error_dialog(error_message):
-    error_dialog = QMessageBox()
-    error_dialog.setIcon(QMessageBox.Critical)
-    error_dialog.setWindowTitle("Error / Ошибка")
-
-    tt = "\n".join(
-        ["Отправьте ошибку / Send error", "email: loshkarev@miuz.ru", "tg: evlosh"]
-        )
-    error_dialog.setText(tt)
-    error_dialog.setDetailedText(error_message)
-
-    exit_button = QPushButton("Выход")
-    exit_button.clicked.connect(QApplication.quit)
-    error_dialog.addButton(exit_button, QMessageBox.ActionRole)
-
-    error_dialog.exec_()
-
-
-#lib folder appears when we pack this project to .app with py2app
-if os.path.exists("lib"): 
-
-    # setup pyqt5 plugin path BEFORE create QApplication
-    # relative path in .app
-    plugin_path = "lib/python3.11/PyQt5/Qt5/plugins"
-    os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = plugin_path
-
-    # catch any unexcepted error with pyqt5 dialog box
-    sys.excepthook = catch_err
-
-
-# from app import app
-# app.exec_()
-# source deacivate
+if System_.set_plugin_path():
+    System_.set_excepthook()
