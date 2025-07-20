@@ -86,6 +86,9 @@ YEAR = datetime.now().year # CURRENT YEAR
 BUNDLE_ID = f"com.{SHORT_AUTHOR_NAME}.{APP_NAME}" # DON'T CHANGE IT
 PY2APP = "py2app" # DON'T CHANGE IT
 
+
+# Обрати внимание, добавлено исключение setuptools, чтобы избежать
+# ошибок при сборке
 OPTIONS = {
     "excludes": ["setuptools"],
     "iconfile": ICON_PATH,
